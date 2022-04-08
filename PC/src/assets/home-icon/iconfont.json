@@ -1,0 +1,65 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "4624936",
+      "name": "我的奖品",
+      "font_class": "wodejiangpin",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "6896858",
+      "name": "待办事项 ",
+      "font_class": "daibanshixiang",
+      "unicode": "e532",
+      "unicode_decimal": 58674
+    },
+    {
+      "icon_id": "9072069",
+      "name": "权限管理",
+      "font_class": "quanxianguanli",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "10620830",
+      "name": "申报查询",
+      "font_class": "shenbaochaxun",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "12527166",
+      "name": "申报管理",
+      "font_class": "shenbaoguanli",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "15223534",
+      "name": "icon_积分管理",
+      "font_class": "icon_jifenguanli",
+      "unicode": "e8cf",
+      "unicode_decimal": 59599
+    },
+    {
+      "icon_id": "23239658",
+      "name": "兑换记录",
+      "font_class": "duihuanjilu",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "23949507",
+      "name": "统计",
+      "font_class": "tongji",
+      "unicode": "ec62",
+      "unicode_decimal": 60514
+    }
+  ]
+}

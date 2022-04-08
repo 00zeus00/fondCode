@@ -1,0 +1,79 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "95734639",
+      "name": "权限管理-面性",
+      "font_class": "quanxianguanli-mianxing",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "95755049",
+      "name": "新项目管理",
+      "font_class": "xinxiangmuguanli",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "95770172",
+      "name": "待处理",
+      "font_class": "daichuli",
+      "unicode": "f4d7",
+      "unicode_decimal": 62679
+    },
+    {
+      "icon_id": "95734651",
+      "name": "积分兑换2",
+      "font_class": "1_jifenduihuan-22",
+      "unicode": "f554",
+      "unicode_decimal": 62804
+    },
+    {
+      "icon_id": "95734652",
+      "name": "积分兑换订单",
+      "font_class": "jifenduihuandingdan",
+      "unicode": "e774",
+      "unicode_decimal": 59252
+    },
+    {
+      "icon_id": "95755050",
+      "name": "统计",
+      "font_class": "tongji3",
+      "unicode": "ec62",
+      "unicode_decimal": 60514
+    },
+    {
+      "icon_id": "95755051",
+      "name": "积分兑换",
+      "font_class": "jifenduihuan",
+      "unicode": "fab3",
+      "unicode_decimal": 64179
+    },
+    {
+      "icon_id": "95827146",
+      "name": "奖品配置",
+      "font_class": "jiangpinpeizhi-copy",
+      "unicode": "fab5",
+      "unicode_decimal": 64181
+    },
+    {
+      "icon_id": "95827878",
+      "name": "查询",
+      "font_class": "zaitu-copy",
+      "unicode": "fbda",
+      "unicode_decimal": 64474
+    },
+    {
+      "icon_id": "95828166",
+      "name": "订单管理",
+      "font_class": "dingdanguanli2-copy",
+      "unicode": "fbdb",
+      "unicode_decimal": 64475
+    }
+  ]
+}
