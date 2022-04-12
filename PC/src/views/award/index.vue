@@ -8,7 +8,12 @@
           >新增奖品</el-button
         >
         <el-container class="check">
-          <el-form label-width="80px" :model="queryParams">
+          <el-form
+            label-width="80px"
+            :model="queryParams"
+            @keyup.enter.native="search"
+            @submit.native.prevent
+          >
             <el-form-item label="奖品名称" prop="awardName">
               <el-input
                 v-model="queryParams.awardName"
@@ -100,6 +105,7 @@
       <el-dialog
         title="奖品信息新增"
         :visible.sync="dialogFormVisible"
+        :close-on-click-modal="false"
         append-to-body
       >
         <el-form :model="form" :rules="rules" ref="addform">
@@ -146,6 +152,7 @@
         class="dialogPicture"
         title="大图展示"
         :visible.sync="dialogVisiblePicture"
+        :close-on-click-modal="false"
         append-to-body
       >
         <!-- <img :src="'http://172.168.111.56:8080/' + itemRow.awardPicture" /> -->

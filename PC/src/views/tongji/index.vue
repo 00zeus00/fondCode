@@ -5,7 +5,12 @@
       <!-- header-搜索栏区域 -->
       <el-header class="header">
         <el-container class="check">
-          <el-form label-width="80px" :model="queryParams">
+          <el-form
+            label-width="80px"
+            :model="queryParams"
+            @keyup.enter.native="search"
+            @submit.native.prevent
+          >
             <el-form-item label="员工编码">
               <el-input
                 v-model="queryParams.employeeId"
@@ -92,7 +97,11 @@
         </el-table-column>
       </el-table>
       <!-- 冻结弹窗 -->
-      <el-dialog title="冻结积分窗口" :visible.sync="dialogFrozenVisible">
+      <el-dialog
+        title="冻结积分窗口"
+        :visible.sync="dialogFrozenVisible"
+        :close-on-click-modal="false"
+      >
         <el-form :model="frozenForm" :rules="rules" ref="frozenform">
           <el-form-item
             label="可冻结积分"
@@ -136,7 +145,11 @@
         </div>
       </el-dialog>
       <!-- 解冻弹窗 -->
-      <el-dialog title="解冻积分窗口" :visible.sync="dialogUnFrozenVisible">
+      <el-dialog
+        title="解冻积分窗口"
+        :visible.sync="dialogUnFrozenVisible"
+        :close-on-click-modal="false"
+      >
         <el-form :model="unfrozenForm" :rules="rules" ref="unfrozenform">
           <el-form-item
             label="可解冻积分"
@@ -238,11 +251,13 @@ export default {
       dialogFrozenVisible: false,
       dialogUnFrozenVisible: false,
       frozenForm: {
+        employeeId: "",
         leftScore: "",
         frozenScore: "",
         freezeDescription: "",
       },
       unfrozenForm: {
+        employeeId: "",
         frozenScore: "",
         unfreezeScore: "",
         unfreezeDescription: "",
@@ -313,7 +328,7 @@ export default {
     frozenSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          getFrozen(this.form).then((res) => {
+          getFrozen(this.frozenForm).then((res) => {
             console.log(res);
             if (res.success) {
               this.$message({
@@ -338,12 +353,12 @@ export default {
     //解冻积分
     openunfrozedialog(row) {
       this.dialogUnFrozenVisible = true;
-      this.unfrozenForm.leftScore = row.leftScore;
+      this.unfrozenForm.frozenScore = row.frozenScore;
     },
     unfrozenSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          getUnFrozen(this.form).then((res) => {
+          getUnFrozen(this.unfrozenForm).then((res) => {
             console.log(res);
             if (res.success) {
               this.$message({

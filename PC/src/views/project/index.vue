@@ -8,17 +8,23 @@
           >新增项目</el-button
         >
         <el-container class="check">
-          <el-form label-width="80px" :model="queryParams">
+          <el-form
+            label-width="80px"
+            :model="queryParams"
+            @keyup.enter.native="search"
+            @submit.native.prevent
+          >
             <el-form-item label="项目类别" prop="typeId">
               <el-select v-model="queryParams.typeId" placeholder="请选择">
-                <el-option label="主动行为" value="1"></el-option>
-                <el-option label="企业认同" value="2"></el-option>
-                <el-option label="共同成长" value="3"></el-option>
-                <el-option label="参与管理" value="4"></el-option>
-                <el-option label="个人成长" value="5"></el-option>
-                <el-option label="责任与担当" value="6"></el-option>
-                <el-option label="特定任务" value="7"></el-option>
-                <el-option label="其他" value="8"></el-option>
+                <el-option label="主动行为" :value="1"></el-option>
+                <el-option label="参与管理" :value="2"></el-option>
+                <el-option label="共同成长" :value="3"></el-option>
+                <el-option label="责任与担当" :value="4"></el-option>
+                <el-option label="主人翁意识" :value="5"></el-option>
+                <el-option label="企业认同" :value="6"></el-option>
+                <el-option label="个人成长" :value="7"></el-option>
+                <el-option label="特定任务" :value="8"></el-option>
+                <el-option label="其他" :value="9"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="分值" prop="itemValue">
@@ -116,8 +122,9 @@
       </el-pagination>
       <!-- 新增弹框 -->
       <el-dialog
-        :title="status == '1' ? '积分项目信息新增' : '奖品项目变更'"
+        :title="status == '1' ? '积分项目信息新增' : '积分项目信息变更'"
         :visible.sync="dialogFormVisible"
+        :close-on-click-modal="false"
       >
         <el-form :model="form" :rules="rules" ref="dialogform">
           <el-form-item

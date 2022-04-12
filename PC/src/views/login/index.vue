@@ -132,7 +132,9 @@ export default {
   },
   created() {
     this.getCookie();
-    this.List = JSON.parse(Cookies.get("loginUser"));
+    this.List =
+      Cookies.get("loginUser") && JSON.parse(Cookies.get("loginUser"));
+    // this.List = JSON.parse(Cookies.get("loginUser"));
   },
   methods: {
     showPwd() {

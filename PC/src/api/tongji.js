@@ -10,7 +10,7 @@ export function getAllData(data) {
 // 冻结积分
 export function getFrozen(data) {
   return request({
-    url: 'score/freeze/',
+    url: '/score/freeze/',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function getFrozen(data) {
 // 解冻积分
 export function getUnFrozen(data) {
   return request({
-    url: 'score/unfreeze',
+    url: '/score/unfreeze',
     method: 'post',
     data
   })

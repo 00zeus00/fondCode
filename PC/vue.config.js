@@ -44,11 +44,11 @@ module.exports = {
     // assetsPublicPath: '/',
     proxy: {
       "/dev-api": {
-        changeOrigin:true,
+        changeOrigin: true,
         //本地服务接口地址
         //  target: "http://localhost:8080/",//我的
         target: 'http://172.168.111.83:8080/', //王
-        // target: "http://172.168.111.40:8080/",  //王泽宇
+        // target: "http://172.168.111.21:8080/", //王泽宇
         // target: "http://124.70.59.49:8080/", //fu
         ws: true,
         pathRewrite: {
@@ -96,7 +96,6 @@ module.exports = {
         symbolId: "icon-[name]",
       })
       .end();
-      
 
     config.when(process.env.NODE_ENV !== "development", (config) => {
       config
@@ -131,7 +130,6 @@ module.exports = {
             reuseExistingChunk: true,
           },
         },
-        
       });
       // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
       config.optimization.runtimeChunk("single");

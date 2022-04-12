@@ -15,16 +15,25 @@
           >删除</el-button
         > -->
         <el-container class="check">
-          <el-form label-width="80px" :model="queryParams">
-            <el-form-item label="角色名称" prop="name">
+          <el-form
+            label-width="80px"
+            :model="queryParams"
+            @keyup.enter.native="search"
+            @submit.native.prevent
+          >
+            <el-form-item label="用户名" prop="realName">
               <el-input
-                v-model="queryParams.name"
-                placeholder="请输入角色名称"
+                v-model="queryParams.realName"
+                placeholder="请输入用户名"
               ></el-input>
             </el-form-item>
           </el-form>
           <!-- @click="search" -->
-          <el-button class="search" type="primary" icon="el-icon-search"
+          <el-button
+            class="search"
+            type="primary"
+            icon="el-icon-search"
+            @click="search"
             >查询</el-button
           >
           <el-button type="info" icon="el-icon-search" @click="reset"
@@ -100,6 +109,7 @@
       <el-dialog
         :title="status == '1' ? '新增角色信息' : '修改角色信息'"
         :visible.sync="dialogFormVisible"
+        :close-on-click-modal="false"
       >
         <el-form :model="form" :rules="rules" ref="form">
           <el-form-item

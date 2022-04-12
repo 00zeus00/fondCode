@@ -11,7 +11,12 @@
           >批量驳回</el-button
         >
         <el-container class="check">
-          <el-form label-width="80px" :model="queryParams">
+          <el-form
+            label-width="80px"
+            :model="queryParams"
+            @keyup.enter.native="search"
+            @submit.native.prevent
+          >
             <!-- <el-form-item label="部门名称" prop="departmentId">
               <el-select
                 v-model="queryParams.departmentId"

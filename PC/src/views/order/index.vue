@@ -5,12 +5,16 @@
       <!-- header-搜索栏区域 -->
       <el-header class="header">
         <el-container class="check">
-          <el-form label-width="80px" :model="queryParams">
+          <el-form
+            label-width="80px"
+            :model="queryParams"
+            @keyup.enter.native="search"
+            @submit.native.prevent
+          >
             <el-form-item label="收货人">
               <el-input
                 v-model="queryParams.name"
                 placeholder="请输入"
-                @keyup.enter.prevent="searchEnterFun($event)"
               ></el-input>
             </el-form-item>
             <el-form-item label="联系电话">
@@ -49,7 +53,7 @@
           prop="orderId"
           label="订单编号"
           align="center"
-          width="200"
+          width="260"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -96,12 +100,34 @@
               @click="confirm(scope.row, 2)"
               >确认收货</el-link
             >
+            <!-- <el-link
+              v-if="
+                scope.row.getWay == '物流'
+              "
+              type="primary"
+              size="mini"
+              @click="wuinfo(scope.row, scope.$index)"
+              > 
+              {{scope.row.orderTransaction == 0?'填写物流信息':`物流公司：${scope.row.expressCom} 单号：${scope.row.expressCode}`  }}  </el-link
+
+              > {{scope.row.orderTransaction == 0?'填写物流信息':'物流公司：'+scope.row.expressCom + scope.row.expressCode }}  </el-link
+            > -->
             <el-link
-              v-if="scope.row.getWay == '物流'"
+              v-if="
+                scope.row.getWay == '物流' && scope.row.orderTransaction == 0
+              "
               type="primary"
               size="mini"
               @click="wuinfo(scope.row, scope.$index)"
               >填写物流信息</el-link
+            >
+            <span
+              v-if="
+                scope.row.getWay == '物流' && scope.row.orderTransaction == 1
+              "
+              >物流公司：{{ scope.row.expressCom }}<br />快递单号：{{
+                scope.row.expressCode
+              }}</span
             >
           </template>
         </el-table-column>
@@ -118,26 +144,30 @@
       >
       </el-pagination>
       <!-- 弹框 -->
-      <el-dialog title="物流信息" :visible.sync="dialogFormVisible">
+      <el-dialog
+        title="物流信息"
+        :visible.sync="dialogFormVisible"
+        :close-on-click-modal="false"
+      >
         <el-form :model="form" :rules="rules" ref="form">
           <el-form-item
             label="物流公司"
-            prop="orderCom"
+            prop="expressCom"
             :label-width="formLabelWidth"
           >
             <el-input
-              v-model="form.orderCom"
+              v-model="form.expressCom"
               autocomplete="off"
               placeholder="请输入物流公司"
             ></el-input>
           </el-form-item>
           <el-form-item
             label="物流单号"
-            prop="orderCode"
+            prop="expressCode"
             :label-width="formLabelWidth"
           >
             <el-input
-              v-model="form.orderCode"
+              v-model="form.expressCode"
               autocomplete="off"
               placeholder="请输入物流单号"
             ></el-input>
@@ -154,7 +184,7 @@
   </el-container>
 </template>
 <script>
-import { getAllData, wuliu } from "@/api/order";
+import { getAllData, wuliu, orderState } from "@/api/order";
 export default {
   data() {
     return {
@@ -171,17 +201,17 @@ export default {
       dialogFormVisible: false,
       form: {
         orderId: "",
-        orderCom: "",
-        orderCode: "",
+        expressCom: "",
+        expressCode: "",
       },
       formLabelWidth: "80px",
       itemobj: {},
       itemobjindex: 0,
       rules: {
-        orderCom: [
+        expressCom: [
           { required: true, message: "还没有写物流公司哦！", trigger: "blur" },
         ],
-        orderCode: [
+        expressCode: [
           { required: true, message: "还没有写物流单号哦！", trigger: "blur" },
         ],
       },
@@ -244,12 +274,10 @@ export default {
         if (valid) {
           wuliu(this.form)
             .then((res) => {
-              console.log(res);
-              this.$alert("恭喜你，已填写成功！！！！", {
-                confirmButtonText: "确定",
-              });
-              that.changeState(1);
-              console.log(res);
+              this.$message.success("操作成功");
+              // that.changeState(1);
+              this.dialogFormVisible = false;
+              this.getList();
             })
             .catch((err) => {
               console.log(err);
@@ -267,15 +295,20 @@ export default {
     // 改变交易状态
     changeState(sta) {
       let data = {
-        orderId: this.row.orderId,
-        orderTransaction: sat,
+        orderId: this.itemobj.orderId,
+        orderTransaction: sta,
       };
       orderState(data)
         .then((res) => {
           if (res.success) {
             this.$message.success("操作成功");
             this.$set(this.tableData[this.itemobjindex], sta);
+            // console.log(11111111111111);
+            // this.$set(this.tableData[this.itemobjindex],'content', 'TIANXIEWULIU');
+            // this.$set(this.tableData.expressCom);
+            // console.log(222222222222222222222);
             this.$refs.ruleForm.resetFields();
+            // console.log(3333333333333333);
             this.dialogFormVisible = false;
           } else {
             this.$message.error("操作失败");
