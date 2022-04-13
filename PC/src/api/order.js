@@ -18,7 +18,7 @@ export function wuliu(data) {
 // 确认收货
 export function orderState(data) {
   return request({
-    url: '',
+    url: '/order/confirm',
     method: 'post',
     data
   })

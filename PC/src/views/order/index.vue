@@ -97,7 +97,8 @@
               v-if="scope.row.getWay == '自提'"
               type="primary"
               size="mini"
-              @click="confirm(scope.row, 2)"
+              @click="confirm(scope.row)"
+              :disabled="scope.row.orderTransaction === 2"
               >确认收货</el-link
             >
             <!-- <el-link
@@ -206,7 +207,7 @@ export default {
       },
       formLabelWidth: "80px",
       itemobj: {},
-      itemobjindex: 0,
+      itemobjindex: "",
       rules: {
         expressCom: [
           { required: true, message: "还没有写物流公司哦！", trigger: "blur" },
@@ -268,14 +269,12 @@ export default {
     },
     // 弹窗提交按钮
     submit(formName) {
-      var that = this;
       this.form.orderId = this.itemobj.orderId;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           wuliu(this.form)
             .then((res) => {
               this.$message.success("操作成功");
-              // that.changeState(1);
               this.dialogFormVisible = false;
               this.getList();
             })
@@ -293,46 +292,58 @@ export default {
       this.$refs[formName].resetFields();
     },
     // 改变交易状态
-    changeState(sta) {
-      let data = {
-        orderId: this.itemobj.orderId,
-        orderTransaction: sta,
+    // changeState(sta) {
+    //   let params = {
+    //     orderId: this.itemobj.orderId,
+    //     telephone: this.itemobj.telephone,
+    //     // orderTransaction: sta,
+    //   };
+    //   let data = {
+    //     orderTransaction: sta,
+    //   };
+    //   orderState(params, data)
+    //     .then((res) => {
+    //       if (res.success) {
+    //         this.$message.success("操作成功");
+    //         this.$set(this.tableData[this.itemobjindex], "params", sta);
+    //         // console.log(11111111111111);
+    //         // this.$set(this.tableData[this.itemobjindex],'content', 'TIANXIEWULIU');
+    //         this.dialogFormVisible = false;
+    //       } else {
+    //         this.$message.error("操作失败");
+    //         console.log(err);
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       this.$message.error("操作失败");
+    //       console.log(err);
+    //     });
+    // },
+    confirm(row) {
+      let params = {
+        orderId: row.orderId,
+        telephone: row.telephone,
+        // orderTransaction: sta,
       };
-      orderState(data)
-        .then((res) => {
-          if (res.success) {
-            this.$message.success("操作成功");
-            this.$set(this.tableData[this.itemobjindex], sta);
-            // console.log(11111111111111);
-            // this.$set(this.tableData[this.itemobjindex],'content', 'TIANXIEWULIU');
-            // this.$set(this.tableData.expressCom);
-            // console.log(222222222222222222222);
-            this.$refs.ruleForm.resetFields();
-            // console.log(3333333333333333);
-            this.dialogFormVisible = false;
-          } else {
-            this.$message.error("操作失败");
-            console.log(err);
-          }
-        })
-        .catch((err) => {
-          this.$message.error("操作失败");
-          console.log(err);
-        });
-    },
-    confirm(row, sta) {
-      var that = this;
+      let _this = this;
       this.$confirm("确定要执行该操作吗?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(function () {
-          // that.changeState({ id: row.id, orderTransaction: parseInt(sta) });
-          that.changeState(2);
+          orderState(params).then((res) => {
+            if (res.success) {
+              _this.$message.success("操作成功");
+              _this.getList();
+            } else {
+              this.$message.error("操作失败");
+              console.log(err);
+            }
+          });
         })
         .catch((err) => {
-          this.$message.error("操作失败");
+          this.$message.error("取消操作");
           console.log(err);
         });
     },

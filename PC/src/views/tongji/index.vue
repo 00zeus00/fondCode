@@ -81,7 +81,7 @@
         </el-table-column>
         <el-table-column prop="leftScore" label="可兑换积分" align="center">
         </el-table-column>
-        <el-table-column prop="frozenScore" label="冻结积分" align="center">
+        <el-table-column prop="freezeScore" label="冻结积分" align="center">
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
@@ -116,11 +116,18 @@
           </el-form-item>
           <el-form-item
             label="拟冻结积分"
-            prop="frozenScore"
+            prop="freezeScore"
             :label-width="formLabelWidth"
           >
             <el-input
-              v-model="frozenForm.frozenScore"
+              v-if="frozenForm.leftScore > 0"
+              v-model="frozenForm.freezeScore"
+              autocomplete="off"
+            ></el-input>
+            <el-input
+              v-if="frozenForm.leftScore <= 0"
+              :disabled="true"
+              v-model="frozenForm.freezeScore"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -153,11 +160,11 @@
         <el-form :model="unfrozenForm" :rules="rules" ref="unfrozenform">
           <el-form-item
             label="可解冻积分"
-            prop="frozenScore"
+            prop="freezeScore"
             :label-width="formLabelWidth"
           >
             <el-input
-              v-model="unfrozenForm.frozenScore"
+              v-model="unfrozenForm.freezeScore"
               autocomplete="off"
               :disabled="true"
             ></el-input>
@@ -168,7 +175,14 @@
             :label-width="formLabelWidth"
           >
             <el-input
+              v-if="unfrozenForm.freezeScore > 0"
               v-model="unfrozenForm.unfreezeScore"
+              autocomplete="off"
+            ></el-input>
+            <el-input
+              v-if="unfrozenForm.freezeScore <= 0"
+              v-model="unfrozenForm.unfreezeScore"
+              :disabled="true"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -210,26 +224,36 @@
 import { getAllData, getFrozen, getUnFrozen } from "@/api/tongji";
 export default {
   data() {
-    // const validPriceNumber = (rule, value, callback) => {
-    //   let numberReg = /^\d+$|^\d+[.]?\d+$/;
-    //   if (value !== "") {
-    //     if (!numberReg.test(value)) {
-    //       callback(new Error("请输入数字"));
-    //     } else if (
-    //       value > this.form.totalScore * 1 ||
-    //       value > this.form.leftScore * 1
-    //     ) {
-    //       callback(new Error("请输入正确的分值"));
-    //     }
-    //   } else {
-    //     callback(new Error("请输入值"));
-    //   }
-    // };
-    const validPriceNumber = (rule, value, callback) => {
+    const validPriceForzen = (rule, value, callback) => {
       let numberReg = /^\d+$|^\d+[.]?\d+$/;
+      console.log("value==", value, typeof value);
+      value = value * 1;
       if (value !== "") {
         if (!numberReg.test(value)) {
           callback(new Error("请输入数字"));
+          if (this.frozenform.leftScore - value < 0) {
+            callback(new Error("分值不足"));
+          } else {
+            callback();
+          }
+        } else {
+          callback();
+        }
+      } else {
+        callback(new Error("请输入值"));
+      }
+    };
+    const validPriceUnforzen = (rule, value, callback) => {
+      let numberReg = /^\d+$|^\d+[.]?\d+$/;
+      value = value * 1;
+      if (value !== "") {
+        if (!numberReg.test(value)) {
+          callback(new Error("请输入数字"));
+          if (this.unfrozenForm.freezeScore - value < 0) {
+            callback(new Error("超出可解冻分值"));
+          } else {
+            callback();
+          }
         } else {
           callback();
         }
@@ -252,14 +276,14 @@ export default {
       dialogUnFrozenVisible: false,
       frozenForm: {
         employeeId: "",
-        leftScore: "",
-        frozenScore: "",
+        leftScore: null,
+        freezeScore: null,
         freezeDescription: "",
       },
       unfrozenForm: {
         employeeId: "",
-        frozenScore: "",
-        unfreezeScore: "",
+        freezeScore: null,
+        unfreezeScore: null,
         unfreezeDescription: "",
       },
       formLabelWidth: "100px",
@@ -270,20 +294,18 @@ export default {
         unfreezeDescription: [
           { required: true, message: "请输入原因描述", trigger: "blur" },
         ],
-        frozenScore: [
+        freezeScore: [
           {
             required: true,
-            message: "请输入要冻结积分",
             trigger: "blur",
-            validator: validPriceNumber,
+            validator: validPriceForzen,
           },
         ],
         unfrozenScore: [
           {
             required: true,
-            message: "请输入要解冻积分",
             trigger: "blur",
-            validator: validPriceNumber,
+            validator: validPriceUnforzen,
           },
         ],
       },
@@ -323,7 +345,7 @@ export default {
     openfrozedialog(row) {
       this.dialogFrozenVisible = true;
       this.frozenForm.leftScore = row.leftScore;
-      // this.form.frozen = "";
+      this.frozenForm.employeeId = row.employeeId;
     },
     frozenSubmit(formName) {
       this.$refs[formName].validate((valid) => {
@@ -353,7 +375,8 @@ export default {
     //解冻积分
     openunfrozedialog(row) {
       this.dialogUnFrozenVisible = true;
-      this.unfrozenForm.frozenScore = row.frozenScore;
+      this.unfrozenForm.freezeScore = row.freezeScore;
+      this.unfrozenForm.employeeId = row.employeeId;
     },
     unfrozenSubmit(formName) {
       this.$refs[formName].validate((valid) => {

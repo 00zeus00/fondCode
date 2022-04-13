@@ -380,7 +380,7 @@ export default {
               type: "success",
               message: "变更成功!",
             });
-            this.$refs[formName].resetFields();
+            // this.$refs[formName].resetFields();
             this.dialogFormVisible = false;
             this.getList();
           });
