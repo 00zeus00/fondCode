@@ -77,12 +77,12 @@
 
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
-            <el-button
+            <el-link
               type="primary"
               size="mini"
               class="change"
               @click="opendialog('2', scope.row)"
-              >修改</el-button
+              >修改</el-link
             >
             <!-- <el-button
               type="danger"

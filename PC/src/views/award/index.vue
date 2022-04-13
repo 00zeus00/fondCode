@@ -4,7 +4,7 @@
     <el-main>
       <!-- header-搜索栏区域 -->
       <el-header class="header">
-        <el-button type="primary" class="new" @click="dialogFormVisible = true"
+        <el-button type="primary" class="new" @click="add()"
           >新增奖品</el-button
         >
         <el-container class="check">
@@ -20,8 +20,12 @@
                 placeholder="请输入"
               ></el-input>
             </el-form-item>
-            <el-form-item label="奖品状态" prop="isExist">
-              <el-select v-model="queryParams.isExist" placeholder="请选择">
+            <el-form-item label="奖品状态" prop="isExist" label-width="200px">
+              <el-select
+                v-model="queryParams.isExist"
+                placeholder="请选择"
+                :autocomplete="true"
+              >
                 <el-option label="已上架" :value="1"></el-option>
                 <el-option label="已下架" :value="0"></el-option>
               </el-select>
@@ -75,14 +79,14 @@
         <el-table-column label="操作" min-width="100" align="center">
           <template slot-scope="scope">
             <el-link
-              type="primary"
+              type="success"
               :disabled="scope.row.isExist === 1"
               @click="condition(scope.row, 1)"
               >上架</el-link
             >
             <el-divider direction="vertical"></el-divider>
             <el-link
-              type="primary"
+              type="danger"
               :disabled="scope.row.isExist === 0"
               @click="condition(scope.row, 0)"
               >下架</el-link
@@ -206,6 +210,7 @@ export default {
       dialogVisible: false,
       disabled: false,
       formLabelWidth: "80px",
+      ImgKey: "",
       rules: {
         awardName: [
           { required: true, message: "请输入奖品名称", trigger: "blur" },
@@ -238,6 +243,10 @@ export default {
   methods: {
     // 获得全部数据
     getList() {
+      // if (data != null) {
+      //   this.queryParams.currentPage = data;
+      // }
+
       getAllData(this.queryParams)
         .then((res) => {
           console.log(res);
@@ -309,6 +318,11 @@ export default {
           console.log(err);
         });
     },
+    add() {
+      this.dialogFormVisible = true;
+      this.form.picturePath = "";
+      this.$refs.coverPicture.clearFiles();
+    },
     //新增图片
     driveBookFunction(item) {
       this.form.picturePath = item;
@@ -326,6 +340,7 @@ export default {
               });
               this.$refs[formName].resetFields();
               this.dialogFormVisible = false;
+              this.queryParams.currentPage = 1;
               this.getList();
             })
             .catch((err) => {
@@ -345,6 +360,7 @@ export default {
     handleOpenPicture(row) {
       this.dialogVisiblePicture = true;
       this.itemRow = row.awardPicture;
+      // this.dialogVisiblePicture.resetFields();
     },
     // 分页
     handleSizeChange(pageSize) {
@@ -389,13 +405,7 @@ export default {
     color: #000;
   }
 }
-.el-dialog__body {
-  width: 80%;
-  padding: 30px 70px;
-  color: #606266;
-  font-size: 14px;
-  word-break: break-all;
-}
+
 .el-pagination {
   margin: 20px 0;
   display: flex;
@@ -409,15 +419,8 @@ export default {
 }
 </style>
 <style>
-.el-dialog__body {
-  width: 80%;
-  padding: 30px 70px;
-  color: #606266;
-  font-size: 14px;
-  word-break: break-all;
-}
-.el-table--border th.el-table__cell,
-.el-table__fixed-right-patch {
-  background: #f5f7fa !important;
+.el-table th.el-table__cell {
+  background-color: #fafafa !important;
+  color: #666666;
 }
 </style>

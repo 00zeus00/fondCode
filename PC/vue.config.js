@@ -48,7 +48,7 @@ module.exports = {
         //本地服务接口地址
         //  target: "http://localhost:8080/",//我的
         // target: 'http://172.168.111.83:8080/', //王
-        // target: "http://172.168.111.21:8080/", //王泽宇
+        // target: "http://172.168.111.21:8080/", //王泽
         target: "http://124.70.59.49:8080/", //fu
         ws: true,
         pathRewrite: {

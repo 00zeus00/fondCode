@@ -138,7 +138,7 @@
         <el-table-column label="操作" align="center" min-width="120">
           <template slot-scope="scope">
             <el-link
-              type="primary"
+              type="success"
               :disabled="
                 scope.row.isApprove === 'Y' || scope.row.isApprove === 'N'
               "
@@ -147,7 +147,7 @@
             >
             <el-divider direction="vertical"></el-divider>
             <el-link
-              type="primary"
+              type="danger"
               :disabled="
                 scope.row.isApprove === 'N' || scope.row.isApprove === 'Y'
               "
@@ -194,6 +194,7 @@ export default {
       total: null,
       tableData: [],
       batchId: [],
+      scoreApplyRecordListRequest: [],
     };
   },
   filters: {
@@ -273,7 +274,12 @@ export default {
       })
         .then(() => {
           // agreeDeclare({ applyId: row.applyId, isApprove: sta });
-          const params = { applyId: row.applyId, isApprove: sta };
+          const params = {
+            employeeId: row.employeeId,
+            applyId: row.applyId,
+            score: row.score,
+            isApprove: sta,
+          };
           agreeDeclare(params)
             .then((res) => {
               if (res.success) {
@@ -335,7 +341,10 @@ export default {
           type: "warning",
         })
           .then(() => {
-            const params = { batchId: this.batchId, batchTag: sta };
+            const params = {
+              batchTag: sta,
+              scoreApplyRecordListRequest: this.scoreApplyRecordListRequest,
+            };
             dealAllDeclare(params)
               .then((res) => {
                 if (res.success) {
@@ -371,6 +380,7 @@ export default {
     },
     handleSelectionChange(selection) {
       this.batchId = selection.map((item) => item.id);
+      this.scoreApplyRecordListRequest = selection;
       console.log(this.batchId);
     },
     // 分页

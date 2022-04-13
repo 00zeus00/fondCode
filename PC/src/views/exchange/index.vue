@@ -50,14 +50,14 @@
           prop="exchangeId"
           label="兑换编码"
           align="center"
-          width="100"
+          width="280"
         >
         </el-table-column>
         <el-table-column
           prop="employeeId"
           label="员工编码"
           align="center"
-          width="100"
+          width="280"
         >
         </el-table-column>
         <!-- <el-table-column
@@ -80,7 +80,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="awardId"
+          prop="awardName"
           label="奖品名称"
           align="center"
           show-overflow-tooltip

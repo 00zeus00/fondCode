@@ -85,12 +85,12 @@
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
-            <el-link type="primary" @click="openfrozedialog(scope.row)"
+            <el-link type="danger" @click="openfrozedialog(scope.row)"
               >冻结</el-link
             >
             <!-- @click="dialogForm = true -->
             <el-divider direction="vertical"></el-divider>
-            <el-link type="primary" @click="openunfrozedialog(scope.row)"
+            <el-link type="success" @click="openunfrozedialog(scope.row)"
               >解冻</el-link
             >
           </template>
@@ -225,19 +225,20 @@ import { getAllData, getFrozen, getUnFrozen } from "@/api/tongji";
 export default {
   data() {
     const validPriceForzen = (rule, value, callback) => {
+      // value = parseInt("value");
       let numberReg = /^\d+$|^\d+[.]?\d+$/;
-      console.log("value==", value, typeof value);
-      value = value * 1;
+      // console.log("value==", value, typeof value);
+      let number = parseInt(this.frozenForm.leftScore) - parseInt(value);
+      // console.log("number==", number, typeof number);
       if (value !== "") {
         if (!numberReg.test(value)) {
           callback(new Error("请输入数字"));
-          if (this.frozenform.leftScore - value < 0) {
+        } else {
+          if (number < 0) {
             callback(new Error("分值不足"));
           } else {
             callback();
           }
-        } else {
-          callback();
         }
       } else {
         callback(new Error("请输入值"));
@@ -245,17 +246,18 @@ export default {
     };
     const validPriceUnforzen = (rule, value, callback) => {
       let numberReg = /^\d+$|^\d+[.]?\d+$/;
-      value = value * 1;
+
+      let num = parseInt(this.unfrozenForm.unfreezeScore) - parseInt(value);
+      console.log("num==", num, typeof num);
       if (value !== "") {
         if (!numberReg.test(value)) {
           callback(new Error("请输入数字"));
-          if (this.unfrozenForm.freezeScore - value < 0) {
-            callback(new Error("超出可解冻分值"));
+        } else {
+          if (num < 0) {
+            callback(new Error("分值不足"));
           } else {
             callback();
           }
-        } else {
-          callback();
         }
       } else {
         callback(new Error("请输入值"));
@@ -301,7 +303,7 @@ export default {
             validator: validPriceForzen,
           },
         ],
-        unfrozenScore: [
+        unfreezeScore: [
           {
             required: true,
             trigger: "blur",
@@ -365,6 +367,7 @@ export default {
                 type: "error",
                 message: res.message,
               });
+              this.$refs[formName].resetFields();
             }
           });
         } else {
@@ -396,6 +399,7 @@ export default {
                 type: "error",
                 message: res.message,
               });
+              this.$refs[formName].resetFields();
             }
           });
         } else {
@@ -473,11 +477,11 @@ export default {
 }
 </style>
 <style>
-.el-input--medium .el-input__inner {
+/* .el-input--medium .el-input__inner {
   height: 36px;
   line-height: 36px;
   width: 80%;
-}
+} */
 .el-textarea__inner {
   width: 80%;
 }

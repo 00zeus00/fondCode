@@ -95,7 +95,7 @@
           <template slot-scope="scope">
             <el-link
               v-if="scope.row.getWay == '自提'"
-              type="primary"
+              type="success"
               size="mini"
               @click="confirm(scope.row)"
               :disabled="scope.row.orderTransaction === 2"

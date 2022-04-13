@@ -90,14 +90,14 @@
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-link
-              type="primary"
+              type="success"
               :disabled="scope.row.aliveTag === 1"
               @click="state(scope.row, 1)"
               >启用</el-link
             >
             <el-divider direction="vertical"></el-divider>
             <el-link
-              type="primary"
+              type="danger"
               :disabled="scope.row.aliveTag === 0"
               @click="state(scope.row, 0)"
               >禁用</el-link

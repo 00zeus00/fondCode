@@ -92,6 +92,10 @@ export default {
       }
       return isJPG && isLt10M;
     },
+    clearFiles() {
+      this.avatar = [];
+      this.imageUrl = "";
+    },
 
     // 获取上传图片列表
     getFileList() {
