@@ -6,6 +6,7 @@
       <el-header class="header">
         <el-container class="check">
           <el-form
+            :rules="rules"
             label-width="80px"
             :model="queryParams"
             @keyup.enter.native="search"
@@ -14,12 +15,14 @@
             <el-form-item label="收货人">
               <el-input
                 v-model="queryParams.name"
+                @keydown.native="keydown($event)"
                 placeholder="请输入"
               ></el-input>
             </el-form-item>
             <el-form-item label="联系电话">
               <el-input
                 v-model="queryParams.telephone"
+                @keydown.native="keydown($event)"
                 placeholder="请输入"
               ></el-input>
             </el-form-item>
@@ -124,7 +127,7 @@
             >
             <span
               v-if="
-                scope.row.getWay == '物流' && scope.row.orderTransaction == 1
+                scope.row.getWay == '物流' && scope.row.orderTransaction != 0
               "
               >物流公司：{{ scope.row.expressCom }}<br />快递单号：{{
                 scope.row.expressCode
@@ -250,6 +253,12 @@ export default {
     search() {
       this.getList();
     },
+    // 禁止输入空格
+    keydown(e) {
+      if (e.keyCode == 32) {
+        e.returnValue = false;
+      }
+    },
     // 重置
     reset() {
       this.queryParams = {
@@ -282,7 +291,7 @@ export default {
               console.log(err);
             });
         } else {
-          console.log("填写失败！！！");
+          // console.log("填写失败！！！");
           return false;
         }
       });
@@ -343,7 +352,7 @@ export default {
           });
         })
         .catch((err) => {
-          this.$message.error("取消操作");
+          // this.$message.error("取消操作");
           console.log(err);
         });
     },
@@ -401,11 +410,12 @@ export default {
 }
 </style>
 <style>
-.el-table thead.is-group th.el-table__cell {
-  background: #f5f7fa;
-}
 .el-input__inner[data-v-007ed227] {
   height: 40px;
   width: 95%;
+}
+.el-table th.el-table__cell {
+  background-color: #fafafa !important;
+  color: #666666;
 }
 </style>

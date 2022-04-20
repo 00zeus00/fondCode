@@ -12,6 +12,7 @@
         >
         <el-container class="check">
           <el-form
+            :rules="rules"
             label-width="80px"
             :model="queryParams"
             @keyup.enter.native="search"
@@ -32,6 +33,7 @@
             <el-form-item label="姓名" prop="name">
               <el-input
                 v-model="queryParams.name"
+                @keydown.native="keydown($event)"
                 placeholder="请输入姓名"
               ></el-input>
             </el-form-item>
@@ -182,6 +184,14 @@ import { parseGeoJSON } from "echarts";
 import { status } from "nprogress";
 export default {
   data() {
+    const validName = (rule, value, callback) => {
+      var reg = /[^\u4e00-\u9fa5]/;
+      if (reg.test(value)) {
+        callback(new Error("请输入中文字符"));
+      } else {
+        callback();
+      }
+    };
     return {
       queryParams: {
         employeeId: null,
@@ -190,6 +200,14 @@ export default {
         typeId: null,
         pageSize: 10,
         PageNo: 1,
+      },
+      rules: {
+        name: [
+          {
+            trigger: ["change"],
+            validator: validName,
+          },
+        ],
       },
       total: null,
       tableData: [],
@@ -253,6 +271,12 @@ export default {
     search() {
       this.getList();
     },
+    // 禁止输入空格
+    keydown(e) {
+      if (e.keyCode == 32) {
+        e.returnValue = false;
+      }
+    },
     // 重置
     reset() {
       this.queryParams = {
@@ -291,12 +315,12 @@ export default {
               }
             })
             .catch((err) => {
-              this.$message.error("操作失败");
+              // this.$message.error("操作失败");
               console.log(err);
             });
         })
         .catch((err) => {
-          this.$message.error("操作失败");
+          // this.$message.error("操作失败");
           console.log(err);
         });
     },
@@ -321,12 +345,12 @@ export default {
               }
             })
             .catch((err) => {
-              this.$message.error("操作失败");
+              // this.$message.error("操作失败");
               console.log(err);
             });
         })
         .catch((err) => {
-          this.$message.error("操作失败");
+          // this.$message.error("操作失败");
           console.log(err);
         });
     },
@@ -356,14 +380,14 @@ export default {
                 }
               })
               .catch((err) => {
-                this.$message.error("操作失败");
+                // this.$message.error("操作失败");
                 console.log(err);
               });
           })
           .catch(() => {
             this.$message({
               type: "info",
-              message: "操作失败",
+              // message: "操作失败",
             });
           });
       }
@@ -444,5 +468,9 @@ export default {
 .el-input__inner[data-v-46d345c3] {
   height: 40px;
   width: 95%;
+}
+.el-table th.el-table__cell {
+  background-color: #fafafa !important;
+  color: #666666;
 }
 </style>

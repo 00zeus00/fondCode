@@ -14,12 +14,14 @@
             <el-form-item label="员工编码">
               <el-input
                 v-model="queryParams.employeeId"
+                @keydown.native="keydown($event)"
                 placeholder="请输入员工编码"
               ></el-input>
             </el-form-item>
             <el-form-item label="姓名" prop="employeeName">
               <el-input
                 v-model="queryParams.employeeName"
+                @keydown.native="keydown($event)"
                 placeholder="请输入姓名"
               ></el-input>
             </el-form-item>
@@ -222,6 +224,7 @@
 </template>
 <script>
 import { getAllData, getFrozen, getUnFrozen } from "@/api/tongji";
+import { number } from "echarts";
 export default {
   data() {
     const validPriceForzen = (rule, value, callback) => {
@@ -247,13 +250,13 @@ export default {
     const validPriceUnforzen = (rule, value, callback) => {
       let numberReg = /^\d+$|^\d+[.]?\d+$/;
 
-      let num = parseInt(this.unfrozenForm.unfreezeScore) - parseInt(value);
-      console.log("num==", num, typeof num);
+      let number = parseInt(this.unfrozenForm.freezeScore) - parseInt(value);
+      console.log("number==", number, typeof number);
       if (value !== "") {
         if (!numberReg.test(value)) {
           callback(new Error("请输入数字"));
         } else {
-          if (num < 0) {
+          if (number < 0) {
             callback(new Error("分值不足"));
           } else {
             callback();
@@ -348,6 +351,8 @@ export default {
       this.dialogFrozenVisible = true;
       this.frozenForm.leftScore = row.leftScore;
       this.frozenForm.employeeId = row.employeeId;
+      this.frozenForm.freezeScore = "";
+      this.frozenForm.freezeDescription = "";
     },
     frozenSubmit(formName) {
       this.$refs[formName].validate((valid) => {
@@ -367,7 +372,9 @@ export default {
                 type: "error",
                 message: res.message,
               });
-              this.$refs[formName].resetFields();
+              this.$nextTick(() => {
+                this.$refs[formName].resetFields();
+              });
             }
           });
         } else {
@@ -380,6 +387,8 @@ export default {
       this.dialogUnFrozenVisible = true;
       this.unfrozenForm.freezeScore = row.freezeScore;
       this.unfrozenForm.employeeId = row.employeeId;
+      this.unfrozenForm.unfreezeScore = "";
+      this.unfrozenForm.unfreezeDescription = "";
     },
     unfrozenSubmit(formName) {
       this.$refs[formName].validate((valid) => {
@@ -410,6 +419,12 @@ export default {
     // 搜索
     search() {
       this.getList();
+    },
+    // 禁止输入空格
+    keydown(e) {
+      if (e.keyCode == 32) {
+        e.returnValue = false;
+      }
     },
     // 重置
     reset() {
@@ -477,11 +492,10 @@ export default {
 }
 </style>
 <style>
-/* .el-input--medium .el-input__inner {
-  height: 36px;
-  line-height: 36px;
-  width: 80%;
-} */
+.el-table th.el-table__cell {
+  background-color: #fafafa !important;
+  color: #666666;
+}
 .el-textarea__inner {
   width: 80%;
 }

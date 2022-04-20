@@ -30,6 +30,8 @@
             <el-form-item label="分值" prop="itemValue">
               <el-input
                 v-model="queryParams.itemValue"
+                type="number"
+                @keydown.native="keydown($event)"
                 placeholder="请输入"
               ></el-input>
             </el-form-item>
@@ -155,14 +157,24 @@
             show-overflow-tooltip
             :label-width="formLabelWidth"
           >
-            <el-input v-model="form.itemDescribe" autocomplete="off"></el-input>
+            <el-input
+              v-model="form.itemDescribe"
+              @keydown.native="keydown($event)"
+              maxlength="40"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
           <el-form-item
             label="分值"
             prop="itemValue"
             :label-width="formLabelWidth"
           >
-            <el-input v-model="form.itemValue" autocomplete="off"></el-input>
+            <el-input
+              v-model="form.itemValue"
+              @keydown.native="keydown($event)"
+              maxlength="11"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
 
           <el-form-item
@@ -287,6 +299,12 @@ export default {
     search() {
       this.getList();
     },
+    // 禁止输入空格
+    keydown(e) {
+      if (e.keyCode == 32) {
+        e.returnValue = false;
+      }
+    },
     // 重置
     reset() {
       this.queryParams = {
@@ -320,7 +338,7 @@ export default {
           });
         })
         .catch((err) => {
-          this.$message.error("操作失败");
+          // this.$message.error("操作失败");
           console.log(err);
         });
     },
@@ -362,6 +380,7 @@ export default {
               });
               this.$refs[formName].resetFields();
               this.dialogFormVisible = false;
+              this.queryParams.currentPage = 1;
               this.getList();
             } else {
             }
@@ -430,5 +449,11 @@ export default {
   margin: 20px 0;
   display: flex;
   justify-content: flex-end;
+}
+</style>
+<style>
+.el-table th.el-table__cell {
+  background-color: #fafafa !important;
+  color: #666666;
 }
 </style>

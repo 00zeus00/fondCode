@@ -73,14 +73,12 @@ export default {
     //   }
     // },
     handleAvatarSuccess(res, file) {
-      // debugger;
       this.imageUrl = URL.createObjectURL(file.raw);
       this.avatar = res.data;
       this.$emit("callbackFunction", this.avatar);
     },
 
     beforeAvatarUpload(file) {
-      // console.log(1111111111111111111);
       const isJPG = file.type == "image/jpeg" || file.type == "image/png";
 
       const isLt10M = file.size / 1024 / 1024 < 10;

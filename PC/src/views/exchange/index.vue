@@ -6,6 +6,7 @@
       <el-header class="header">
         <el-container class="check">
           <el-form
+            :rules="rules"
             label-width="80px"
             :model="queryParams"
             @keyup.enter.native="search"
@@ -26,7 +27,9 @@
             <el-form-item label="姓名" prop="name">
               <el-input
                 v-model="queryParams.name"
+                @keydown.native="keydown($event)"
                 placeholder="请输入姓名"
+                maxlength="20"
               ></el-input>
             </el-form-item>
           </el-form>
@@ -115,6 +118,15 @@
 import { getAllData } from "@/api/exchange";
 export default {
   data() {
+    const validName = (rule, value, callback) => {
+      var reg = /[^\u4e00-\u9fa5]/;
+      if (reg.test(value)) {
+        callback(new Error("请输入中文字符"));
+        return;
+      } else {
+        callback();
+      }
+    };
     return {
       queryParams: {
         employeeId: null,
@@ -125,6 +137,14 @@ export default {
       },
       total: null,
       tableData: [],
+      rules: {
+        name: [
+          {
+            trigger: ["change"],
+            validator: validName,
+          },
+        ],
+      },
     };
   },
   filters: {
@@ -161,6 +181,12 @@ export default {
     // 搜索
     search() {
       this.getList();
+    },
+    // 禁止输入空格
+    keydown(e) {
+      if (e.keyCode == 32) {
+        e.returnValue = false;
+      }
     },
     // 重置
     reset() {
@@ -230,5 +256,9 @@ export default {
 .el-input__inner[data-v-2a5bc780] {
   height: 40px;
   width: 95%;
+}
+.el-table th.el-table__cell {
+  background-color: #fafafa !important;
+  color: #666666;
 }
 </style>

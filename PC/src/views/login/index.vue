@@ -21,6 +21,7 @@
           <el-input
             ref="account"
             v-model="loginForm.account"
+            @keydown.native="keydown($event)"
             placeholder="请输入用户名"
             name="account"
             type="text"
@@ -38,6 +39,7 @@
             :key="passwordType"
             ref="password"
             v-model="loginForm.password"
+            @keydown.native="keydown($event)"
             :type="passwordType"
             placeholder="请输入密码"
             name="password"
@@ -54,9 +56,9 @@
         </el-form-item>
         <div class="remember">
           <el-checkbox v-model="loginForm.remember">记住密码</el-checkbox>
-          <el-link target="_blank" class="forget" @click="restPsw()"
+          <!-- <el-link target="_blank" class="forget" @click="restPsw()"
             >重置密码？</el-link
-          >
+          > -->
         </div>
 
         <el-button
@@ -147,6 +149,12 @@ export default {
         this.$refs.password.focus();
       });
     },
+    // 禁止输入空格
+    keydown(e) {
+      if (e.keyCode == 32) {
+        e.returnValue = false;
+      }
+    },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
@@ -192,29 +200,29 @@ export default {
         remember: remember === undefined ? false : Boolean(remember),
       };
     },
-    restPsw() {
-      this.loginForm = {
-        userId: this.List.userId,
-        account: this.loginForm.account,
-        password: "123456",
-      };
-      console.log(this.loginForm, this.List);
-      resetpassword(this.loginForm)
-        .then(async (res) => {
-          if (res.success) {
-            this.$message.success("操作成功");
-            // await this.$store.dispatch("user/logout");
-            // this.$router.push(`/login?redirect=${this.$route.fullPath}`);
-          } else {
-            this.$message.error("操作失败");
-            console.log(err);
-          }
-        })
-        .catch((err) => {
-          this.$message.error("操作失败");
-          console.log(err);
-        });
-    },
+    // restPsw() {
+    //   this.loginForm = {
+    //     userId: this.List.userId,
+    //     account: this.loginForm.account,
+    //     password: "123456",
+    //   };
+    //   console.log(this.loginForm, this.List);
+    //   resetpassword(this.loginForm)
+    //     .then(async (res) => {
+    //       if (res.success) {
+    //         this.$message.success("操作成功");
+    //         // await this.$store.dispatch("user/logout");
+    //         // this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    //       } else {
+    //         this.$message.error("操作失败");
+    //         console.log(err);
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       this.$message.error("操作失败");
+    //       console.log(err);
+    //     });
+    // },
   },
 };
 </script>

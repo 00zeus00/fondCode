@@ -24,6 +24,7 @@
             <el-form-item label="用户名" prop="realName">
               <el-input
                 v-model="queryParams.realName"
+                @keydown.native="keydown($event)"
                 placeholder="请输入用户名"
               ></el-input>
             </el-form-item>
@@ -267,6 +268,12 @@ export default {
     search() {
       this.getList();
     },
+    // 禁止输入空格
+    keydown(e) {
+      if (e.keyCode == 32) {
+        e.returnValue = false;
+      }
+    },
     // 重置
     reset() {
       this.queryParams = {
@@ -481,5 +488,11 @@ $light_gray: #eee;
   color: $dark_gray;
   cursor: pointer;
   user-select: none;
+}
+</style>
+<style>
+.el-table th.el-table__cell {
+  background-color: #fafafa !important;
+  color: #666666;
 }
 </style>
