@@ -179,9 +179,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="visible = submit('form')"
-            >确 定</el-button
-          >
+          <el-button type="primary" @click="submit('form')">确 定</el-button>
         </div>
       </el-dialog>
     </el-main>
@@ -275,6 +273,8 @@ export default {
       this.itemobj = row;
       this.itemobjindex = index;
       this.dialogFormVisible = true;
+      this.form.expressCom = null;
+      this.form.expressCode = null;
     },
     // 弹窗提交按钮
     submit(formName) {
@@ -285,9 +285,11 @@ export default {
             .then((res) => {
               this.$message.success("操作成功");
               this.dialogFormVisible = false;
+              this.$refs[formName].resetFields();
               this.getList();
             })
             .catch((err) => {
+              this.$refs[formName].resetFields();
               console.log(err);
             });
         } else {

@@ -14,7 +14,7 @@
             @keyup.enter.native="search"
             @submit.native.prevent
           >
-            <el-form-item label="奖品名称" prop="awardName">
+            <el-form-item label="奖品名称">
               <el-input
                 v-model="queryParams.awardName"
                 @keydown.native="keydown($event)"
@@ -119,6 +119,7 @@
               v-model="form.awardName"
               @keydown.native="keydown($event)"
               maxlength="40"
+              show-word-limit
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -131,6 +132,7 @@
               v-model="form.awardPrice"
               @keydown.native="keydown($event)"
               maxlength="11"
+              show-word-limit
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -184,11 +186,12 @@ export default {
   data() {
     const validPriceNumber = (rule, value, callback) => {
       let numberReg = /^\d+$|^\d+[.]?\d+$/;
+      let rangeReg = /^[0-9]*[1-9][0-9]*$/;
       if (value !== "") {
         if (!numberReg.test(value)) {
           callback(new Error("请输入数字"));
-        } else if (value <= 1) {
-          callback(new Error("请输入奖品价格"));
+        } else if (!rangeReg.test(value)) {
+          callback(new Error("请输正整数"));
         } else {
           callback();
         }
@@ -196,18 +199,18 @@ export default {
         callback(new Error("请输入值"));
       }
     };
-    const validAwardName = (rule, value, callback) => {
-      let numberReg = /^\d+$|^\d+[.]?\d+$/;
-      if (value !== "") {
-        if (!numberReg.test(value)) {
-          callback(new Error("请输入奖品名称"));
-        } else {
-          callback();
-        }
-      } else {
-        callback(new Error("请输入奖品名称"));
-      }
-    };
+    // const validAwardName = (rule, value, callback) => {
+    //   let numberReg = /^\d+$|^\d+[.]?\d+$/;
+    //   if (value !== "") {
+    //     if (!numberReg.test(value)) {
+    //       callback(new Error("请输入奖品名称"));
+    //     } else {
+    //       callback();
+    //     }
+    //   } else {
+    //     callback(new Error("请输入奖品名称"));
+    //   }
+    // };
     return {
       uploadurl: "",
       queryParams: {
@@ -239,13 +242,11 @@ export default {
             required: true,
             message: "请输入奖品名称",
             trigger: "blur",
-            validator: validAwardName,
           },
         ],
         awardPrice: [
           {
             required: true,
-            message: "请输入奖品价格",
             trigger: "blur",
             validator: validPriceNumber,
           },
@@ -395,7 +396,7 @@ export default {
             });
         } else {
           // console.log("提交失败！！！");
-          this.$refs[formName].resetFields();
+          // this.$refs[formName].resetFields();
           return false;
         }
       });
@@ -411,9 +412,10 @@ export default {
       // debugger;
       if (row.awardPicture) {
         this.itemRow = row.awardPicture;
-        this.$nextTick(() => {
-          this.$refs.coverPicture.clearFiles();
-        });
+        this.$refs.coverPicture.clearFiles();
+        // this.$nextTick(() => {
+        //   this.$refs.coverPicture.clearFiles();
+        // });
       } else {
         this.itemRow = tupian;
       }

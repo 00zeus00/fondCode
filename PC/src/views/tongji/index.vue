@@ -124,6 +124,8 @@
             <el-input
               v-if="frozenForm.leftScore > 0"
               v-model="frozenForm.freezeScore"
+              maxlength="11"
+              show-word-limit
               autocomplete="off"
             ></el-input>
             <el-input
@@ -141,13 +143,15 @@
             <el-input
               type="textarea"
               :rows="2"
+              maxlength="40"
+              show-word-limit
               v-model="frozenForm.freezeDescription"
               autocomplete="off"
             ></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFrozenVisible = false">取 消</el-button>
+          <el-button @click="closefrozenForm('frozenform')">取 消</el-button>
           <el-button type="primary" @click="frozenSubmit('frozenform')"
             >确 定</el-button
           >
@@ -179,6 +183,8 @@
             <el-input
               v-if="unfrozenForm.freezeScore > 0"
               v-model="unfrozenForm.unfreezeScore"
+              maxlength="11"
+              show-word-limit
               autocomplete="off"
             ></el-input>
             <el-input
@@ -197,12 +203,16 @@
               type="textarea"
               :rows="2"
               v-model="unfrozenForm.unfreezeDescription"
+              maxlength="40"
+              show-word-limit
               autocomplete="off"
             ></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogUnFrozenVisible = false">取 消</el-button>
+          <el-button @click="closeunfrozenForm('unfrozenform')"
+            >取 消</el-button
+          >
           <el-button type="primary" @click="unfrozenSubmit('unfrozenform')"
             >确 定</el-button
           >
@@ -230,6 +240,7 @@ export default {
     const validPriceForzen = (rule, value, callback) => {
       // value = parseInt("value");
       let numberReg = /^\d+$|^\d+[.]?\d+$/;
+      let rangeReg = /^[0-9]*[1-9][0-9]*$/;
       // console.log("value==", value, typeof value);
       let number = parseInt(this.frozenForm.leftScore) - parseInt(value);
       // console.log("number==", number, typeof number);
@@ -237,10 +248,14 @@ export default {
         if (!numberReg.test(value)) {
           callback(new Error("请输入数字"));
         } else {
-          if (number < 0) {
-            callback(new Error("分值不足"));
+          if (!rangeReg.test(value)) {
+            callback(new Error("请输入正整数"));
           } else {
-            callback();
+            if (number < 0) {
+              callback(new Error("分值不足"));
+            } else {
+              callback();
+            }
           }
         }
       } else {
@@ -249,6 +264,7 @@ export default {
     };
     const validPriceUnforzen = (rule, value, callback) => {
       let numberReg = /^\d+$|^\d+[.]?\d+$/;
+      let rangeReg = /^[0-9]*[1-9][0-9]*$/;
 
       let number = parseInt(this.unfrozenForm.freezeScore) - parseInt(value);
       console.log("number==", number, typeof number);
@@ -256,10 +272,14 @@ export default {
         if (!numberReg.test(value)) {
           callback(new Error("请输入数字"));
         } else {
-          if (number < 0) {
-            callback(new Error("分值不足"));
+          if (!rangeReg.test(value)) {
+            callback(new Error("请输入正整数"));
           } else {
-            callback();
+            if (number < 0) {
+              callback(new Error("分值不足"));
+            } else {
+              callback();
+            }
           }
         }
       } else {
@@ -354,6 +374,10 @@ export default {
       this.frozenForm.freezeScore = "";
       this.frozenForm.freezeDescription = "";
     },
+    closefrozenForm(formName) {
+      this.dialogFrozenVisible = false;
+      this.$refs[formName].resetFields();
+    },
     frozenSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -382,6 +406,7 @@ export default {
         }
       });
     },
+
     //解冻积分
     openunfrozedialog(row) {
       this.dialogUnFrozenVisible = true;
@@ -389,6 +414,10 @@ export default {
       this.unfrozenForm.employeeId = row.employeeId;
       this.unfrozenForm.unfreezeScore = "";
       this.unfrozenForm.unfreezeDescription = "";
+    },
+    closeunfrozenForm(formName) {
+      this.dialogUnFrozenVisible = false;
+      this.$refs[formName].resetFields();
     },
     unfrozenSubmit(formName) {
       this.$refs[formName].validate((valid) => {
@@ -495,8 +524,5 @@ export default {
 .el-table th.el-table__cell {
   background-color: #fafafa !important;
   color: #666666;
-}
-.el-textarea__inner {
-  width: 80%;
 }
 </style>

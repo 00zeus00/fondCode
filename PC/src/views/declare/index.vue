@@ -12,7 +12,6 @@
         >
         <el-container class="check">
           <el-form
-            :rules="rules"
             label-width="80px"
             :model="queryParams"
             @keyup.enter.native="search"
@@ -30,7 +29,7 @@
                 <el-option label="技术中心" value="5"></el-option>
               </el-select>
             </el-form-item> -->
-            <el-form-item label="姓名" prop="name">
+            <el-form-item label="姓名">
               <el-input
                 v-model="queryParams.name"
                 @keydown.native="keydown($event)"
@@ -184,14 +183,14 @@ import { parseGeoJSON } from "echarts";
 import { status } from "nprogress";
 export default {
   data() {
-    const validName = (rule, value, callback) => {
-      var reg = /[^\u4e00-\u9fa5]/;
-      if (reg.test(value)) {
-        callback(new Error("请输入中文字符"));
-      } else {
-        callback();
-      }
-    };
+    // const validName = (rule, value, callback) => {
+    //   var reg = /[^\u4e00-\u9fa5]/;
+    //   if (reg.test(value)) {
+    //     callback(new Error("请输入中文字符"));
+    //   } else {
+    //     callback();
+    //   }
+    // };
     return {
       queryParams: {
         employeeId: null,
@@ -201,14 +200,14 @@ export default {
         pageSize: 10,
         PageNo: 1,
       },
-      rules: {
-        name: [
-          {
-            trigger: ["change"],
-            validator: validName,
-          },
-        ],
-      },
+      // rules: {
+      //   name: [
+      //     {
+      //       trigger: ["change"],
+      //       validator: validName,
+      //     },
+      //   ],
+      // },
       total: null,
       tableData: [],
       batchId: [],

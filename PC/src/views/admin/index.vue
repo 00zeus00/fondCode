@@ -99,7 +99,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="queryParams.currentPage"
+        :current-page="queryParams.pageNo"
         :page-size="queryParams.pageSize"
         :page-sizes="[10, 20, 30]"
         layout="total, sizes, prev, pager, next, jumper"
@@ -124,6 +124,7 @@
               placeholder="请输入账号"
               name="account"
               type="text"
+              :disabled="true"
               autocomplete="off"
             />
           </el-form-item>
@@ -207,7 +208,7 @@ export default {
         account: null,
         realName: null,
         password: null,
-        currentPage: 1,
+        pageNo: 1,
         pageSize: 10,
       },
 
@@ -280,7 +281,7 @@ export default {
         title: null,
         feedbackType: null,
         dateTime: null,
-        currentPage: 1,
+        pageNo: 1,
         pageSize: 10,
       };
       this.getList();
@@ -410,8 +411,8 @@ export default {
       this.queryParams.pageSize = pageSize;
       this.getList();
     },
-    handleCurrentChange(currentPage) {
-      this.queryParams.currentPage = currentPage;
+    handleCurrentChange(pageNo) {
+      this.queryParams.pageNo = pageNo;
       this.getList();
     },
     // 多选

@@ -6,7 +6,6 @@
       <el-header class="header">
         <el-container class="check">
           <el-form
-            :rules="rules"
             label-width="80px"
             :model="queryParams"
             @keyup.enter.native="search"
@@ -24,7 +23,7 @@
                 <el-option label="技术中心" value="5"></el-option>
               </el-select>
             </el-form-item> -->
-            <el-form-item label="姓名" prop="name">
+            <el-form-item label="姓名">
               <el-input
                 v-model="queryParams.name"
                 @keydown.native="keydown($event)"
@@ -118,15 +117,15 @@
 import { getAllData } from "@/api/exchange";
 export default {
   data() {
-    const validName = (rule, value, callback) => {
-      var reg = /[^\u4e00-\u9fa5]/;
-      if (reg.test(value)) {
-        callback(new Error("请输入中文字符"));
-        return;
-      } else {
-        callback();
-      }
-    };
+    // const validName = (rule, value, callback) => {
+    //   var reg = /[^\u4e00-\u9fa5]/;
+    //   if (reg.test(value)) {
+    //     callback(new Error("请输入中文字符"));
+    //     return;
+    //   } else {
+    //     callback();
+    //   }
+    // };
     return {
       queryParams: {
         employeeId: null,
@@ -137,14 +136,14 @@ export default {
       },
       total: null,
       tableData: [],
-      rules: {
-        name: [
-          {
-            trigger: ["change"],
-            validator: validName,
-          },
-        ],
-      },
+      // rules: {
+      //   name: [
+      //     {
+      //       trigger: ["change"],
+      //       validator: validName,
+      //     },
+      //   ],
+      // },
     };
   },
   filters: {

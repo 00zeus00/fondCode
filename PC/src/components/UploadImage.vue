@@ -38,6 +38,7 @@ export default {
     return {
       pid: this.ids,
       uploadUrl: "/dev-api/PictureInformation/add",
+      // uploadUrl: "/stage-api/PictureInformation/add",
       headers: {
         Authorization: getToken(),
       },

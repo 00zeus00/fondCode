@@ -130,11 +130,11 @@
       >
         <el-form :model="form" :rules="rules" ref="dialogform">
           <el-form-item
-            v-if="status == '1'"
             label="项目类别"
             prop="typeId"
             :label-width="formLabelWidth"
           >
+            <!-- v-if="status == '1'" -->
             <el-select
               v-model="form.typeId"
               placeholder="请选择反馈类型"
@@ -161,6 +161,7 @@
               v-model="form.itemDescribe"
               @keydown.native="keydown($event)"
               maxlength="40"
+              show-word-limit
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -173,6 +174,7 @@
               v-model="form.itemValue"
               @keydown.native="keydown($event)"
               maxlength="11"
+              show-word-limit
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -214,9 +216,12 @@ export default {
   data() {
     const validPriceNumber = (rule, value, callback) => {
       let numberReg = /^\d+$|^\d+[.]?\d+$/;
+      let rangeReg = /^[0-9]*[1-9][0-9]*$/;
       if (value !== "") {
         if (!numberReg.test(value)) {
           callback(new Error("请输入数字"));
+        } else if (!rangeReg.test(value)) {
+          callback(new Error("请输正整数"));
         } else {
           callback();
         }
@@ -252,7 +257,6 @@ export default {
         itemValue: [
           {
             required: true,
-            message: "请输入分值",
             trigger: "blur",
             validator: validPriceNumber,
           },
@@ -399,7 +403,7 @@ export default {
               type: "success",
               message: "变更成功!",
             });
-            // this.$refs[formName].resetFields();
+            this.$refs[formName].resetFields();
             this.dialogFormVisible = false;
             this.getList();
           });
